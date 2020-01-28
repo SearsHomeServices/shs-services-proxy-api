@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+		<sub-flow name="notification-subFlow" doc:id="8f3a709d-80b8-465c-bbb3-8c28725ca179" >
+		<json-logger:logger doc:name="Logger" doc:id="4229464b-873d-4866-bd67-29d3ddb9c64f" config-ref="JsonLoggerConfig" priority="DEBUG" tracePoint="FLOW" message='"notification-subFlow"'/>
+		<set-variable value='#[%dw 2.0
+output application/json
+---
+{
+ service: attributes.UriParams.uri,
+ method: attributes.Method,
+ queryParams: attributes.queryParams,
+ headers:attributes.headers
+}]' doc:name="Identifiers" doc:id="74130f45-3d21-4951-8f4f-597e71009772" variableName="identifier" />
+		<json-logger:logger doc:name="Logger" doc:id="59106356-c068-462e-ba34-0cf0d355641c" config-ref="JsonLoggerConfig" priority="DEBUG" tracePoint="AFTER_TRANSFORM" message='"headers.."'>
+			<json-logger:content ><![CDATA[#[output application/json ---
+{
+ 	payload: payload,
+ 	identifires: vars.identifier,
+ 	attributes: attributes
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="35d34723-1315-4aa5-8d7c-472df87273ea" variableName="initialPayload"/>
+		<file:read doc:name="Read" doc:id="2384b3c8-d8da-4f41-90b5-523196b62554" path="${mule.home}${file.separator}apps${file.separator}${app.name}${file.separator}config${file.separator}notification${file.separator}proxyentries-${mule.env}.json" outputMimeType="application/json"/>
+		<ee:transform doc:name="Transform Message" doc:id="39b43e43-9d62-4143-b513-a5b8fb54466e">
+			<ee:message>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="legacyProperties"><![CDATA[output application/json
+---
+payload.notificationproxyList filter(vars.identifier.service == $.originalUri and vars.identifier.method == $.method)
+]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<json-logger:logger doc:name="Logger" doc:id="d2dfb2b4-80dd-478a-ad90-cac9f2958179" config-ref="JsonLoggerConfig" priority="DEBUG" tracePoint="AFTER_TRANSFORM" message='"headers.."'>
+			<json-logger:content ><![CDATA[#[output application/json ---
+{
+ 	payload: payload,
+ 	headers: vars.identifier,
+ 	attributes: attributes
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<flow-ref doc:name="proxy-service" doc:id="36b187bf-e809-41b0-9001-6d48f065b2be" name="proxy-services-subFlow"/>
+	
+</sub-flow>	
+</mule>

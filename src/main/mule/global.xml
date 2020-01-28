@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file"
+    xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+    xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+    xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+    xmlns:http="http://www.mulesoft.org/schema/mule/http"
+    xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+    xmlns="http://www.mulesoft.org/schema/mule/core"
+    xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+        http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+        http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+
+    <!--Common properties -->
+    <configuration-properties
+        doc:name="Properties Config"
+        file="properties/common.yaml" />
+    <!--Non-secure properties (override common properties if needed here) -->
+    <configuration-properties
+        doc:name="Properties Config"
+        file="properties/${mule.env}.yaml" />
+
+    <!-- Secure properties -->
+    <secure-properties:config 
+        name="Secure_Properties_Config"
+        doc:name="Secure Properties Config"
+        file="properties/${mule.env}-secure.yaml"
+        key="${mule.vault.key}" />
+
+    <!-- HTTP Requester -->
+    <http:request-config
+        name="NotificationsService"
+        doc:name="HTTP Request configuration"
+        responseTimeout="${notifications.timeouts.response}"
+        basePath="${notifications.basePath}">
+        <http:request-connection
+            host="${notifications.host}"
+            port="${notifications.port}"
+            connectionIdleTimeout="${notifications.timeouts.connection}"
+            protocol="${notifications.protocol}" tlsContext="TrustStore" >
+            <reconnection >
+                <reconnect 
+                    frequency="${http.reconnection.frequency}" 
+                    count="${http.reconnection.attempts}" />
+            </reconnection>
+            <http:authentication >
+                <http:basic-authentication 
+                    username="${secure::api.client_id}" 
+                    password="${secure::api.client_secret}" />
+            </http:authentication>
+        </http:request-connection>
+    </http:request-config>
+
+    <tls:context 
+        name="Keystore" 
+        doc:name="TLS Context" 
+        doc:id="368ff486-ff61-495d-bf67-8b6f5cceedde" >
+        <tls:key-store 
+            type="jks" 
+            path="${key.path}" 
+            alias="${key.alias}" 
+            keyPassword="${secure::keystore.pwd}" 
+            password="${secure::keystore.pwd}" />
+    </tls:context>
+
+    <tls:context 
+        name="TrustStore" 
+        doc:name="TLS Context" 
+        doc:id="d514ca4b-a199-43db-86d2-0f60bd30ee1f" >
+        <tls:trust-store 
+            path="${trust.path}" 
+            password="${secure::truststore.pwd}" 
+            type="jks" />
+    </tls:context>
+
+    <json-logger:config 
+        name="JsonLoggerConfig" 
+        doc:name="Json Logger Config" 
+        disabledFields="${json.logger.disabledFields}" />
+	<http:request-config name="HTTP_Notification_Request_configuration" doc:name="HTTP Request configuration" doc:id="0eccc988-581f-4363-bdd7-e4aab0d7e16f" >
+		<http:request-connection host="#[vars.legacyProperties[0].host]" port="#[vars.legacyProperties[0].port]" connectionIdleTimeout="${http.timeouts.connection}">
+			<reconnection >
+				<reconnect frequency="${http.reconnection.frequency}" count="${http.reconnection.attempts}" />
+			</reconnection>
+		</http:request-connection>
+	</http:request-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="a85a3b92-dde5-4ce4-a85f-8976bda71d52" >
+		<file:connection />
+	</file:config>
+
+</mule>

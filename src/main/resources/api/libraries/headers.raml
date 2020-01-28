@@ -1,0 +1,50 @@
+#%RAML 1.0 Library
+usage: Library for Headers
+
+
+traits:
+  hashHeaders:
+    headers:
+        Content-type: 
+          displayName: Content-type
+          description: either xml or json
+          type: string
+          required: false
+        Accept: 
+          displayName: Accept
+          description: field can be used to specify certain media types which are acceptable for the response
+          type: string
+          required: false
+        client_id:
+           displayName: client_id
+           description: clientid assigned by Sears.
+           type: string
+           required: false
+           example: vhjfqugcbt346868jtrgue
+        client_secret:
+          displayName: client_secret
+          description: This can be used along with the sears client_id to validate the requestor. 
+          type: string
+          required: false
+          example: guybguywTFXE6638738b6eu
+        userid:
+          displayName: userid
+          description: Logged in user id
+          type: string
+          required: false
+          example: gorski 
+        servicename:
+           description: servicename
+           type: string
+           required: false
+           example: IHSOLookup
+        serviceversion:
+           description: serviceversion
+           type: string
+           required: false
+           example: "1.0"             
+        currentdatetime:
+            description:  Date Response Returned
+            type: string
+            required: false
+            example: Fri, 24 Jun 2016 17:45:44 GMT

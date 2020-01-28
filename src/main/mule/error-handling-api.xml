@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" 
+    xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" 
+    xmlns="http://www.mulesoft.org/schema/mule/core" 
+    xmlns:http="http://www.mulesoft.org/schema/mule/http" 
+    xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd 
+        http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+        http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+
+    <error-handler name="api-error-handler">
+        <on-error-propagate type="APIKIT:BAD_REQUEST">
+            <ee:transform doc:id="efb0562f-a898-4ae6-8ca1-02ac5f4d491c">
+                <ee:variables>
+                    <ee:set-variable variableName="error"><![CDATA[%dw 2.0
+output application/json encoding="UTF-8"
+---
+{
+    status: "400",
+    message: "Bad request",
+    details: error.description default ""
+}]]></ee:set-variable>
+                </ee:variables>
+            </ee:transform>
+            <flow-ref doc:name="error-handling-format-pattern" name="error-handling-format-pattern" />
+        </on-error-propagate>
+        <on-error-propagate type="APIKIT:NOT_FOUND">
+            <ee:transform doc:id="7ed4a912-6aca-4ff9-b924-a68ab5abd4db">
+                <ee:variables>
+                    <ee:set-variable variableName="error"><![CDATA[%dw 2.0
+output application/json encoding="UTF-8"
+---
+{
+    status: "404",
+    message: "Resource not found",
+    details: error.description default ""
+}]]></ee:set-variable>					
+                </ee:variables>
+            </ee:transform>
+            <flow-ref doc:name="error-handling-format-pattern" name="error-handling-format-pattern" />
+        </on-error-propagate>
+        <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+            <ee:transform doc:id="6ba363e6-1ae1-4e07-a00c-d268bec17248">
+                <ee:variables>
+                    <ee:set-variable variableName="error"><![CDATA[%dw 2.0
+output application/json encoding="UTF-8"
+---
+{
+    status: "405",
+    message: "Method not allowed",
+    details: error.description default ""
+}]]></ee:set-variable>
+                </ee:variables>
+            </ee:transform>
+            <flow-ref doc:name="error-handling-format-pattern" name="error-handling-format-pattern" />
+        </on-error-propagate>
+        <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+            <ee:transform doc:id="8f983bd5-8e35-44a8-8482-0fa4161594fd">
+                <ee:variables>
+                    <ee:set-variable variableName="error"><![CDATA[%dw 2.0
+output application/json encoding="UTF-8"
+---
+{
+    status: "406",
+    message: "Not acceptable",
+    details: error.description default ""
+}]]></ee:set-variable>
+                </ee:variables>
+            </ee:transform>
+            <flow-ref doc:name="error-handling-format-pattern" name="error-handling-format-pattern" />
+        </on-error-propagate>
+        <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+            <ee:transform doc:id="ada69b84-60b3-469c-8b76-12f14ab90f43">
+                <ee:variables>
+                    <ee:set-variable variableName="error"><![CDATA[%dw 2.0
+output application/json encoding="UTF-8"
+---
+{
+    status: "415",
+    message: "Unsupported media type",
+    details: error.description default ""
+}]]></ee:set-variable>
+                </ee:variables>
+            </ee:transform>
+            <flow-ref doc:name="error-handling-format-pattern" name="error-handling-format-pattern" />
+        </on-error-propagate>
+        <on-error-propagate type="APIKIT:NOT_IMPLEMENTED"
+            doc:name="On Error Propagate" enableNotifications="true"
+            logException="true">
+            <ee:transform doc:id="b830e6d2-7958-422e-8b85-a60e674a5a02">
+                <ee:variables>					
+                    <ee:set-variable variableName="error"><![CDATA[%dw 2.0
+output application/json encoding="UTF-8"
+---
+{
+    status: "501",
+    message: "Not Implemented",
+    details: error.description default ""
+}]]></ee:set-variable>
+                </ee:variables>
+            </ee:transform>
+            <flow-ref doc:name="error-handling-format-pattern" name="error-handling-format-pattern" />
+        </on-error-propagate>
+        
+        <on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d7956441-7111-4149-94c7-afc4b12def0b" type="EXPRESSION">
+            <json-logger:logger doc:name="Log  Error" config-ref="JsonLoggerConfig" priority="ERROR" tracePoint="EXCEPTION" message="#[&quot;Transformation error: &quot; ++ write(error.description, &quot;application/json&quot;)]" />
+            <ee:transform doc:name="Transform Message" doc:id="19d42dd9-30b4-4240-9fcb-da718a0a0eef">
+                <ee:variables >
+                    <ee:set-variable variableName="error" ><![CDATA[%dw 2.0
+output application/json encoding="UTF-8"
+---
+{
+    status: "500",
+    message: "Server Error",
+    details: "Error with data transformation.  See log for details."
+}
+]]></ee:set-variable>
+                </ee:variables>
+            </ee:transform>
+            <flow-ref doc:name="error-handling-format-pattern" name="error-handling-format-pattern" />
+        </on-error-propagate>
+        
+        <on-error-propagate enableNotifications="true"
+            logException="true" doc:name="On Error Propagate" doc:id="5516a09d-4662-479a-9efe-65c3c7a630b7">
+            <ee:transform doc:id="b830e6d2-7958-422e-8b85-a60e674a5a02">
+                <ee:variables>
+                    <ee:set-variable variableName="error"><![CDATA[%dw 2.0
+output application/json encoding="UTF-8"
+---
+{
+    status: "500",
+    message: "Server Error",
+    details: error.description default ""
+}
+]]></ee:set-variable>
+                </ee:variables>
+            </ee:transform>
+            <flow-ref doc:name="error-handling-format-pattern" name="error-handling-format-pattern" />
+        </on-error-propagate>		
+
+    </error-handler>
+    
+    <sub-flow name="error-handling-format-pattern" doc:id="3a4e1012-2f59-43c2-8aa9-68d241c160a8">
+        <json-logger:logger doc:name="Log  Error" config-ref="JsonLoggerConfig" priority="ERROR" tracePoint="EXCEPTION" message="#[write(vars.error, &quot;application/json&quot;)]"/>
+        <ee:transform doc:name="Transform Message" doc:id="a0fb3f1e-9ed1-4a87-a1ab-02e25078cd5a" >
+            <ee:message >
+                <ee:set-payload ><![CDATA[%dw 2.0
+output application/json  encoding="UTF-8"
+---
+{
+    message: vars.error.message,
+    details: vars.error.details
+}]]></ee:set-payload>
+            </ee:message>
+            <ee:variables >
+                <ee:set-variable variableName="httpStatus"><![CDATA[vars.error.status]]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+    </sub-flow>
+    <flow name="send-notifications" doc:id="7055c5a9-d6e4-4eb5-9b06-7c7fa25c7a8f" doc:description="Only use for appropriate level of errors (i.e. core functionality impaired such as connection issues). Best practice is to call this flow in an Async scope so that it does not hold up the regular error handling processsing.">
+        <json-logger:logger doc:name="Sending notification email" doc:id="b7d256cf-060b-418c-a360-e9d4897aa766" config-ref="JsonLoggerConfig" priority="WARN" tracePoint="EVENT" message="Sending notificaiton email for error"/>
+        <set-payload value='#[%dw 2.0
+import * from dw::core::Binaries
+output application/json
+var severity = vars.error.severity default "Warning"
+var errorMessage = (
+    "Severity: " ++ severity ++ "\n" ++ 
+    "Message: " ++ vars.error.message ++ "\n" ++ 
+    "Details: " ++ vars.error.details
+) as Binary
+---
+// NOTE: not all possible fields are listed here.
+// Check the notification service documentation in exchange for a complete sample.
+{
+    id: vars.error.correlationId default correlationId,
+    source: app.name,
+    severity: severity,
+    timestamp: now() as String,
+    targets: {
+        email: {
+            // to: [], // the default is set in notification app but can be overridden here.
+            subject: "Alert from " ++ app.name,
+            bodyType: "text/plain",
+            body: toBase64(errorMessage)
+        }
+    }
+}]' doc:name="Set Notification message" doc:id="f34067e0-0382-4a96-950f-b9f15b7ed17b" />
+        <http:request method="POST" doc:name="Request" doc:id="ef92df3e-9c03-4bd5-ba31-ef0f234757d5" config-ref="NotificationsService" path="${notifications.path}">
+        </http:request>
+        <error-handler >
+            <on-error-continue enableNotifications="false" logException="false" doc:name="On Error Continue" doc:id="b8e254e0-a651-43a4-ab20-7533aac2b437" >
+                <json-logger:logger doc:name="Handle error" doc:id="13de100e-0d55-473c-ba17-9b653587e4bd" config-ref="JsonLoggerConfig" priority="ERROR" tracePoint="EXCEPTION" message="Error sending notification dumping payload"/>
+                <logger level="ERROR" doc:name="Notification message" doc:id="71a2862f-06ec-4e89-8428-8836f40618b2" message="#[payload]" category="notification"/>
+            </on-error-continue>
+        </error-handler>
+    </flow>
+</mule>

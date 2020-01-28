@@ -1,0 +1,212 @@
+{
+    "servicecontractsproxyList": [
+        {
+            "originalUri": "addAgreement",
+            "forwardingUri": "/HSAgreementService/soapV2/addAgreement",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "addManualLead",
+            "forwardingUri": "/HSAgreementService/soapV2/addManualLead",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "addManualLeadPending",
+            "forwardingUri": "/HSAgreementService/soapV2/addManualLeadPending",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "cancelAgreement",
+            "forwardingUri": "/HSAgreementService/soapV2/cancelAgreement",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "createAgreement",
+            "forwardingUri": "/HSAgreementService/soapV2/createAgreement",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "createTechPA",
+            "forwardingUri": "/HSAgreementService/soapV2/createTechPA",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "getAgreementDetails",
+            "forwardingUri": "/HSAgreementService/soapV2/getAgreementDetails",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "getAgreementList",
+            "forwardingUri": "/HSAgreementService/soapV2/getAgreementList",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "getHwpDetails",
+            "forwardingUri": "/HSAgreementService/soapV2/getHwpDetails",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "getInstallmentCancellationEndDate",
+            "forwardingUri": "/HSAgreementService/soapV2/getInstallmentCancellationEndDate",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "getInvoiceDetails",
+            "forwardingUri": "/HSAgreementService/soapV2/getInvoiceDetails",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "getItemDetails",
+            "forwardingUri": "/HSAgreementService/soapV2/getItemDetails",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "getLandingPageReturn",
+            "forwardingUri": "/HSAgreementService/soapV2/getLandingPageReturn",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "getLeadDetails",
+            "forwardingUri": "/HSAgreementService/soapV2/getLeadDetails",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "getMailLeadDets",
+            "forwardingUri": "/HSAgreementService/soapV2/getMailLeadDets",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+         {
+            "originalUri": "ping",
+            "forwardingUri": "/HSAgreementService/soapV2/ping",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "queueCancel",
+            "forwardingUri": "/HSAgreementService/soapV2/queueCancel",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "queueCancelList",
+            "forwardingUri": "/HSAgreementService/soapV2/queueCancelList",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "reprint",
+            "forwardingUri": "/HSAgreementService/soapV2/reprint",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "searchHwp",
+            "forwardingUri": "/HSAgreementService/soapV2/searchHwp",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "settlement",
+            "forwardingUri": "/HSAgreementService/soapV2/settlement",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+         {
+            "originalUri": "updateInstallmentBilling",
+            "forwardingUri": "/HSAgreementService/soapV2/updateInstallmentBilling",
+            "protocol": "HTTPS",
+            "host": "hsccn-pascagreements.intra.searshc.com",
+            "port": "443",
+            "method": "POST"
+        },
+        {
+            "originalUri": "getCancellationPrice",
+            "forwardingUri": "/PricingService/services/HSSCPricingService",
+            "protocol": "HTTP",
+            "host": "hspapricing.intra.sears.com",
+            "port": "80",
+            "method": "POST"
+        },
+        {
+            "originalUri": "getCancellationPriceIB",
+            "forwardingUri": "/PricingService/services/HSSCPricingService",
+            "protocol": "HTTP",
+            "host": "hspapricing.intra.sears.com",
+            "port": "80",
+            "method": "POST"
+        },
+        {
+            "originalUri": "getQualificationPricing",
+            "forwardingUri": "/PricingService/services/HSSCPricingService",
+            "protocol": "HTTP",
+            "host": "hspapricing.intra.sears.com",
+            "port": "80",
+            "method": "POST"
+        },
+        {
+            "originalUri": "getTax",
+            "forwardingUri": "/TaxService/services/TaxService",
+            "protocol": "HTTP",
+            "host": "hspapricing.intra.sears.com",
+            "port": "80",
+            "method": "POST"
+        } 
+              ]
+}

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:oauth="http://www.mulesoft.org/schema/mule/oauth"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/oauth http://www.mulesoft.org/schema/mule/oauth/current/mule-oauth.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<!-- <http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="33d87902-d349-4ffc-94b6-2b0e183ad456" responseTimeout="${http.timeouts.response}" basePath="/${partOrderService.basePath}">
+		<http:request-connection port="${partOrderService.port}" protocol="${partOrderService.protocol}" host="${partOrderService.host}">
+			<tls:context >
+				<tls:trust-store insecure="true"/>
+			</tls:context>
+			
+		</http:request-connection>
+		</http:request-config> -->
+	
+	<sub-flow name="proxy-services-subFlow" doc:id="45d3d5ea-e5b7-47f6-a0b4-c6f42fddd330" >
+		<choice doc:name="Choice-based on HTTP or HTTPS" doc:id="495f5ca0-fcdf-4dc1-b076-4de0d406ed69" >
+			<when expression='#[vars.legacyProperties[0].protocol == "HTTPS"]'>
+				<json-logger:logger doc:name="Logger" doc:id="384c6ed2-2bee-41ed-aac1-486320c51914" message="Before Calling Legacy Service" config-ref="JsonLoggerConfig" priority="DEBUG" tracePoint="BEFORE_REQUEST"/>
+				<http:request doc:name="Request" doc:id="f78ed2d0-6882-48ec-973f-6ed16f3b1a19" method="#[vars.legacyProperties[0].method]" path="#[vars.legacyProperties[0].forwardingUri]" config-ref="HTTP_Notification_Request_configuration">
+					<http:body ><![CDATA[#[vars.initialPayload]]]></http:body>
+					<http:headers><![CDATA[#[vars.identifier.headers]]]></http:headers>
+					<http:query-params ><![CDATA[#[vars.identifier.queryParams]]]></http:query-params>
+				
+</http:request>
+				<json-logger:logger doc:name="Logger" doc:id="90c4319c-cce1-48f3-92cc-ddeec44b331c" message="After Calling Legacy Service" config-ref="JsonLoggerConfig" priority="DEBUG" tracePoint="AFTER_REQUEST"/>
+			</when>
+			<when expression='#[vars.legacyProperties[0].protocol == "HTTP"]'>
+				<json-logger:logger doc:name="Logger" doc:id="43bc60ef-ffe1-4716-b205-9ecd401d5fc1" config-ref="JsonLoggerConfig" message="Before Calling  Legacy Service" priority="DEBUG" tracePoint="BEFORE_REQUEST"/>
+				<http:request method="#[vars.legacyProperties[0].method]" doc:name="Request" doc:id="34faa686-d0ac-402a-a75b-a10e89eb39dc" config-ref="HTTP_Notification_Request_configuration" path="#[vars.legacyProperties[0].forwardingUri]">
+					<http:body ><![CDATA[#[vars.initialPayload]]]></http:body>
+					<http:headers><![CDATA[#[vars.identifier.headers]]]></http:headers>
+					<http:query-params><![CDATA[#[vars.identifier.queryParams]]]></http:query-params>
+				</http:request>
+				<json-logger:logger doc:name="Logger" doc:id="1782b257-e9c3-48aa-96f4-9a775eb7bdf6" config-ref="JsonLoggerConfig" message="After Calling Legacy Service" priority="DEBUG" tracePoint="AFTER_REQUEST"/>
+			</when>
+			<otherwise>
+				<ee:transform doc:name="Transform Message" doc:id="06136cdd-d2c4-429a-ba94-17406c2119a5" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message":"No Notification Legacy Service found"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+
+			</otherwise>
+		
+</choice>
+		
+	</sub-flow>
+</mule>

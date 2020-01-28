@@ -1,0 +1,13 @@
+{
+    "notificationproxyList": [
+        {
+            "originalUri": "notify",
+            "forwardingUri": "/HSSOMNotificationService/services/notify",
+            "protocol": "HTTP",
+            "host": "hfdvhshasvc1.vm.itg.corp.us.shldcorp.com",
+            "port": "10880",
+            "method": "POST"
+        }]
+ }       
+        
+       

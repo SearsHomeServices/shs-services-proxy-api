@@ -1,0 +1,43 @@
+api:
+  id: "123456" # replace with real id once added to api manager
+
+http:
+  host: "0.0.0.0"
+  basePath: "/v1/*"
+  private:
+    port: "8091"
+  timeouts:
+    response: "30000"
+    connection: "30000"
+  reconnection:
+    frequency: "500"
+    attempts: "3"
+    
+https:
+  host: "0.0.0.0"
+  private:
+    port: "8092"
+
+json:
+  logger:
+    application:
+      name: "${project.artifactId}"
+      version: "${project.version}"
+    disabledFields: ""
+
+notifications:
+  protocol: "HTTPS"
+  host: "api-test.aws.transformco.com"
+  port: "443"
+  path: "/notifications"
+  basePath: "/shs-notification-svc-api-dev/v1"
+  emailSubject: "Example Email Subject"
+  timeouts:
+    connection: "30000"
+    response: "30000"
+
+key:
+  path: "keystore.jks"
+  alias: "apitransformco"
+trust:
+  path: "nonprod_cloud_truststore.jks"
